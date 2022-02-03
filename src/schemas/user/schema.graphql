@@ -3,9 +3,19 @@
   name: String!
   email: String!
   age: Int
+  birthDate: String!
+  createdAt: String!
+}
+
+input BithdateInAge {
+  birthDate: String
 }
 
 type Query {
   users: [User]
   user(id: ID!): User
+}
+
+type Mutation {
+  createUser(name: String!, password: String!, email: String!, birthDate: String, createdAt: String): User
 }

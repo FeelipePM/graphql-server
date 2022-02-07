@@ -12,7 +12,7 @@
   "license": "ISC",
   "type": "module",
   "prisma": {
-  "seed": "node ./prisma/seed.js"
+  "seed": "node ./prisma/seeds/index.js"
 },
   "dependencies": {
     "@prisma/client": "3.9.0",

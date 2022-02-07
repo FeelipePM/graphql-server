@@ -1,6 +1,5 @@
 import { prisma } from '../../database/prismaClient.js';
 
-
 const date = new Date();
 
 const currentYear = date.getFullYear();
@@ -12,7 +11,7 @@ export const resolvers = {
       where: {
         id: id,
       },
-    }), 
+    }),
   },
 
   User: {
@@ -23,8 +22,8 @@ export const resolvers = {
   },
 
   Mutation: {
-    createUser: (_, { name,email, password, birthDate }) => {
-    const newUser = prisma.user.create({
+    createUser: async (_, { name,email, password, birthDate }) => {
+    const newUser = await prisma.user.create({
         data: {
           name,
           email,

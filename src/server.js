@@ -4,9 +4,10 @@ import { importSchema } from 'graphql-import';
 
 const typeDefs = importSchema('./src/schemas/user/schema.graphql');
 
-const server = new ApolloServer({ 
-  typeDefs: typeDefs, 
-  resolvers });
+const server = new ApolloServer({
+  typeDefs: typeDefs,
+  resolvers,
+ });
 
 server.listen().then(({ url }) => {
   console.log(`🚀 Server ready at ${url}`);

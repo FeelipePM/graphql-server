@@ -2,18 +2,18 @@
   "name": "graphql-server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/server.js"
+    "dev": "ts-node-dev src/server.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "prisma": {
-  "seed": "node ./prisma/seeds/index.js"
-},
+    "seed": "node ./prisma/seeds/index.js"
+  },
   "dependencies": {
     "@prisma/client": "3.9.0",
     "apollo-server": "^3.6.2",
@@ -21,10 +21,13 @@
     "graphql-import": "^1.0.2"
   },
   "devDependencies": {
+    "@babel/preset-typescript": "^7.16.7",
     "babel-loader": "^8.2.3",
     "eslint": "^8.8.0",
     "eslint-config-standard": "^16.0.3",
     "nodemon": "^2.0.15",
-    "prisma": "^3.9.0"
+    "prisma": "^3.9.0",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.5.5"
   }
 }

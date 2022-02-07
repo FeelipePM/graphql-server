@@ -12,11 +12,12 @@
   "license": "ISC",
   "type": "module",
   "prisma": {
-  "seed": "node ./prisma/seeds/index.js"
-},
+    "seed": "node ./prisma/seeds/index.js"
+  },
   "dependencies": {
     "@prisma/client": "3.9.0",
     "apollo-server": "^3.6.2",
+    "bcrypt": "^5.0.1",
     "graphql": "^16.3.0",
     "graphql-import": "^1.0.2"
   },

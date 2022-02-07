@@ -14,6 +14,7 @@ input BithdateInAge {
 type Query {
   users: [User]
   user(id: ID!): User
+  signIn(email: String!, password: String!): User
 }
 
 type Mutation {
@@ -24,4 +25,6 @@ type Mutation {
     birthDate: String
     createdAt: String
   ): User
+
+  signIn(email: String!, password: String!): User
 }

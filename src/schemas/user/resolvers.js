@@ -1,4 +1,6 @@
 import { prisma } from '../../database/prismaClient.js';
+import { generateHash, compareHash } from './providers/hashProvider.js';
+
 
 const date = new Date();
 
@@ -27,11 +29,25 @@ export const resolvers = {
         data: {
           name,
           email,
-          password,
+          password: generateHash(password),
           birthDate,
         }
       });
       return newUser;
+    },
+
+    signIn: async (_, { email, password }) => {
+      const user = await prisma.user.findUnique({
+        where: {
+          email,
+        },
+      });
+
+      const isPasswordValid = await compareHash(password, user.password);
+
+      console.log(!isPasswordValid ? 'Invalid password' : 'Valid password');
+
+      return user;
     }
   },
 

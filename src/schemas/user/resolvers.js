@@ -29,26 +29,35 @@ export const resolvers = {
         data: {
           name,
           email,
-          password: generateHash(password),
+          password: await generateHash(password),
           birthDate,
         }
       });
       return newUser;
     },
 
-    signIn: async (_, { email, password }) => {
+    signIn: async (parent, args) => {
+      const hash = "$2b$08$vf0vGEFqUfbY0dIPyWhDnez3L7hrXwLHkg33QPFHiEXr/g0/KU0Uu";
+
       const user = await prisma.user.findUnique({
         where: {
-          email,
-        },
+          email: args.email,
+        }
       });
 
-      const isPasswordValid = await compareHash(password, user.password);
+      if (!user) {
+        throw new Error('User not found');
+      }
 
-      console.log(!isPasswordValid ? 'Invalid password' : 'Valid password');
+      const isPasswordValid = await compareHash(args.password, user.password);
 
-      return user;
+      if (!isPasswordValid) {
+        throw new Error('Password is invalid');
+      } else {
+        return user;
+      }
     }
   },
 
 }
+

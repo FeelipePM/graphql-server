@@ -1,5 +1,6 @@
 import { prisma } from '../../database/prismaClient.js';
-import { generateHash, compareHash } from './providers/hashProvider.js';
+import { generateHash } from './providers/hashProvider.js';
+import { authenticateUserService } from './services/authenticateUserService.js';
 
 
 const date = new Date();
@@ -8,7 +9,7 @@ const currentYear = date.getFullYear();
 
 export const resolvers = {
   Query: {
-    users: () => prisma.user.findMany(),
+    users: () => prisma.user.findMany({}),
     user: (_, { id }) => prisma.user.findUnique({
       where: {
         id: id,
@@ -24,39 +25,31 @@ export const resolvers = {
   },
 
   Mutation: {
-    createUser: async (_, { name,email, password, birthDate }) => {
+    createUser: async (_, { name,email, password, birthDate, inputRole }) => {
+      const defaultRoleId = "3f67dd89-ee64-4e70-a932-fce87f5fcab6"
     const newUser = await prisma.user.create({
         data: {
           name,
           email,
           password: await generateHash(password),
           birthDate,
+          UserRole: {
+            create: {
+              role_id: !inputRole ? defaultRoleId : inputRole,
+            }
+          }
         }
       });
+
       return newUser;
     },
 
-    signIn: async (parent, args) => {
-      const hash = "$2b$08$vf0vGEFqUfbY0dIPyWhDnez3L7hrXwLHkg33QPFHiEXr/g0/KU0Uu";
+    signIn: async (_, { email, password }) => {
 
-      const user = await prisma.user.findUnique({
-        where: {
-          email: args.email,
-        }
-      });
+      const userToken = await authenticateUserService(email, password);
 
-      if (!user) {
-        throw new Error('User not found');
-      }
-
-      const isPasswordValid = await compareHash(args.password, user.password);
-
-      if (!isPasswordValid) {
-        throw new Error('Password is invalid');
-      } else {
-        return user;
-      }
-    }
+      return userToken;
+    },
   },
 
 }

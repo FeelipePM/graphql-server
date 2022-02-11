@@ -1,9 +1,20 @@
-  type User {
+type User {
   id: ID!
   name: String!
   email: String!
   age: Int
-  birthDate: String!
+  birthDate: String
+  createdAt: String!
+}
+
+type AuthData {
+  user: User
+  token: String
+}
+
+type Role {
+  name: String
+  code: String!
   createdAt: String!
 }
 
@@ -11,11 +22,25 @@ input BithdateInAge {
   birthDate: String
 }
 
+input inputRole {
+  role_id: String
+}
+
 type Query {
   users: [User]
   user(id: ID!): User
+  signIn(email: String!, password: String!): User
 }
 
 type Mutation {
-  createUser(name: String!, password: String!, email: String!, birthDate: String, createdAt: String): User
+  createUser(
+    name: String!
+    password: String!
+    email: String!
+    birthDate: String
+    inputRole: String
+  ): User
+
+  signIn(email: String!, password: String!): AuthData
+  createRole(name: String!, code: String): Role
 }

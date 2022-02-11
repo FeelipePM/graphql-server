@@ -11,14 +11,21 @@
   "author": "",
   "license": "ISC",
   "type": "module",
+  "prisma": {
+    "seed": "node ./prisma/seeds/index.js"
+  },
   "dependencies": {
     "@prisma/client": "3.9.0",
     "apollo-server": "^3.6.2",
+    "bcrypt": "^5.0.1",
     "graphql": "^16.3.0",
     "graphql-import": "^1.0.2"
   },
   "devDependencies": {
     "babel-loader": "^8.2.3",
+    "eslint": "^8.8.0",
+    "eslint-config-standard": "^16.0.3",
+    "jsonwebtoken": "^8.5.1",
     "nodemon": "^2.0.15",
     "prisma": "^3.9.0"
   }

@@ -3,7 +3,7 @@ import pkg from 'jsonwebtoken';
 import { compareHash } from '../providers/hashProvider.js';
 import authConfig from '../../../config/auth.js';
 
-const { sign } = pkg;
+const { sign, verify } = pkg;
 
 export async function authenticateUserService(email, password) {
   const user = await prisma.user.findUnique({
@@ -33,6 +33,9 @@ export async function authenticateUserService(email, password) {
     user,
     token
   }
+
+  const decoded = verify(token, authConfig.jwt.secret);
+  console.log(decoded.sub);
 
   return userAuthenticate;
 }

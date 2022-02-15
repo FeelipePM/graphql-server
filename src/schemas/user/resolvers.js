@@ -9,7 +9,10 @@ const currentYear = date.getFullYear();
 
 export const resolvers = {
   Query: {
-    users: () => prisma.user.findMany({}),
+    users: () => {
+      // if(context.authScope !== ADMIN) throw new AuthenticationError('not admin');
+      return prisma.user.findMany();
+    },
     user: (_, { id }) => prisma.user.findUnique({
       where: {
         id: id,
@@ -44,7 +47,7 @@ export const resolvers = {
       return newUser;
     },
 
-    signIn: async (_, { email, password }) => {
+    signIn: async (_, { email, password }, ctx) => {
 
       const userToken = await authenticateUserService(email, password);
 

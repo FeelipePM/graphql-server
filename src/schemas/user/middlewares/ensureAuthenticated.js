@@ -1,9 +1,21 @@
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 
-export function ensureAuthenticated(token) {
-try {
-  const decoded = jwt.verify(token, process.env.APP_SECRET);
-} catch {
-  throw new Error('Invalid JWT token', 401);
-}
+export function ensureAuthenticated(req) {
+  const token = req.headers.authorization;
+
+  if (!token) {
+    return {};
+  }
+
+  try {
+    const { sub } = jwt.verify(token, process.env.APP_SECRET);
+
+    return {
+      user: {
+        id: sub,
+      },
+    };
+  } catch {
+    throw new Error("Invalid JWT token", 401);
+  }
 }

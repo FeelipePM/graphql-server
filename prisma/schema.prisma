@@ -17,6 +17,7 @@ model User {
   updatedAt DateTime @default(now())
 
   UserRole UserRole[]
+  Author   Author?
   @@map("users")
 }
 
@@ -50,4 +51,36 @@ model UserRole {
   createdAt DateTime @default(now())
 
   @@map("user_roles")
+}
+
+model Author {
+  id              String @id @default(uuid())
+  user_id         String @unique
+  author          User   @relation(fields: [user_id], references: [id])
+  bio_description String
+
+  Post Post[]
+
+  @@map("authors")
+}
+
+model Post {
+  id           String   @id @default(uuid())
+  content      String
+  author_id    String
+  author       Author   @relation(fields: [author_id], references: [id])
+  published    Boolean  @default(false)
+  published_at DateTime @default(now())
+
+  PostImages PostImages[]
+  @@map("posts")
+}
+
+model PostImages {
+  id      String @id @default(uuid())
+  path    String
+  post_id String
+  post    Post   @relation(fields: [post_id], references: [id])
+
+  @@map("post_images")
 }

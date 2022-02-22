@@ -9,8 +9,8 @@ const typeDefs = importSchema("./src/schemas/user/schema.graphql");
 
 const app = express();
 
-const context = ({ req }) => {
-  const { user } = ensureAuthenticated(req);
+const context = async ({ req }) => {
+  const { user } = await ensureAuthenticated(req);
 
   return {
     user,

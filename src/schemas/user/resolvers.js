@@ -10,7 +10,7 @@ const currentYear = date.getFullYear();
 export const resolvers = {
   Query: {
     users: (parent, args, context) => {
-      if (!context.user?.id) return null;
+      if (!context.user?.id) return new ApolloError("You must be logged in");
 
       return prisma.user.findMany();
     },
@@ -36,7 +36,10 @@ export const resolvers = {
       { name, email, password, birthDate, inputRole },
       context
     ) => {
+      if (!context.user?.id) return new ApolloError("You must be logged in");
+
       const defaultRoleId = "3f67dd89-ee64-4e70-a932-fce87f5fcab6";
+
       const newUser = await prisma.user.create({
         data: {
           name,
@@ -57,6 +60,12 @@ export const resolvers = {
     createPost: async (_, args, context) => {
       const { content, published, author_id } = args.data;
 
+      if (!context.user?.id)
+        throw new ApolloError("You must be logged in to create a post");
+
+      if (!author_id)
+        throw new ApolloError("You must be an author in to create a post");
+
       const newPost = await prisma.post.create({
         data: {
           content,
@@ -69,15 +78,18 @@ export const resolvers = {
         },
       });
 
-      if (!context.user) {
-        throw new ApolloError("You must be logged in to create a post");
-      } else {
-        return newPost;
-      }
+      return newPost;
     },
 
     updatePost: async (_, args, context) => {
       const { id, content, published, author_id } = args.data;
+
+      if (!context.user?.id)
+        throw new ApolloError("You must be logged in to create a post");
+
+      if (!author_id)
+        throw new ApolloError("You must be an author in to create a post");
+
       const updatePost = await prisma.post.update({
         where: {
           id,
@@ -93,19 +105,13 @@ export const resolvers = {
         },
       });
 
-      if (!context.user) {
-        throw new ApolloError("You must be logged in to update a post");
-      } else if (context.user.id !== author_id) {
-        throw new ApolloError("You are not authorized to update this post");
-      } else {
-        return updatePost;
-      }
+      return updatePost;
     },
 
     signIn: async (_, { email, password }, context) => {
       const userToken = await authenticateUserService(email, password);
 
-      if (!context.user) return userToken;
+      return userToken;
     },
   },
 };

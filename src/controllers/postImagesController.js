@@ -1,6 +1,10 @@
 import { prisma } from "../database/prismaClient.js";
+import { ApolloError } from "apollo-server";
 
 export const postImagesController = async (req, res) => {
+  if (!req.user)
+    throw new ApolloError("You must be logged in to create a post");
+
   const postImage = await prisma.postImages.create({
     data: {
       path: req.file.path,
@@ -11,6 +15,5 @@ export const postImagesController = async (req, res) => {
       },
     },
   });
-
   return res.send({ postImage });
 };

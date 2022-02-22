@@ -51,12 +51,7 @@ export const resolvers = {
         },
       });
 
-      //verify if the user is admin
-      if (context.user.UserRole.role_id !== defaultRoleId) {
-        throw new ApolloError("You are not authorized to create a user");
-      } else {
-        return newUser;
-      }
+      return newUser;
     },
 
     createPost: async (_, args, context) => {
@@ -74,7 +69,7 @@ export const resolvers = {
         },
       });
 
-      if (!context.user !== author_id) {
+      if (!context.user) {
         throw new ApolloError("You must be logged in to create a post");
       } else {
         return newPost;

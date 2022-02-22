@@ -1,21 +1,37 @@
 import jwt from "jsonwebtoken";
 
-export function ensureAuthenticated(req) {
+export function ensureAuthenticated(req, res = null, next = null) {
   const token = req.headers.authorization;
+  const express_source = !!next;
+  // dois cenarios, com express, com gql
 
   if (!token) {
+    if (express_source) {
+      req.locals = {};
+      return next();
+    }
+
     return {};
   }
 
-  try {
-    const { sub } = jwt.verify(token, process.env.APP_SECRET);
+  const treatedToken = token.replace("Bearer ", "");
 
-    return {
-      user: {
-        id: sub,
-      },
+  try {
+    const { sub } = jwt.verify(treatedToken, process.env.APP_SECRET);
+    const user = {
+      id: sub,
     };
+
+    if (express_source) {
+      req.locals = { user };
+      return next();
+    }
+
+    return { user };
   } catch {
+    if (express_source) {
+      return res.status(401).json({ error: "Token invalid" });
+    }
     throw new Error("Invalid JWT token", 401);
   }
 }

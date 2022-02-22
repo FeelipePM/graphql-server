@@ -1,25 +1,35 @@
-import { ApolloServer } from 'apollo-server';
-import { resolvers } from './schemas/user/resolvers.js';
-import { importSchema } from 'graphql-import';
-import { ensureAuthenticated } from '././schemas/user/middlewares/ensureAuthenticated.js';
+import { ApolloServer } from "apollo-server";
+import { resolvers } from "./schemas/user/resolvers.js";
+import { importSchema } from "graphql-import";
+import { ensureAuthenticated } from "././schemas/user/middlewares/ensureAuthenticated.js";
+import express from "express";
+import routes from "../src/shared/routes/index.js";
 
-const typeDefs = importSchema('./src/schemas/user/schema.graphql');
+const typeDefs = importSchema("./src/schemas/user/schema.graphql");
+
+const app = express();
+
+const context = ({ req }) => {
+  const { user } = ensureAuthenticated(req);
+
+  return {
+    user,
+  };
+};
+
+//export type Context = ReturnType <typeof context>;
 
 const server = new ApolloServer({
   typeDefs: typeDefs,
   resolvers,
-   context: ({ req }) => {
-    const token = req.headers.authorization || '';
+  context,
+});
 
-    if (!token) {
-      throw new Error('JWT token is missing', 401);
-    }
+app.use(routes);
 
-    const user = ensureAuthenticated(token);
-
-     return { user };
-   }
- });
+app.listen(3000, () => {
+  console.log("Server is running on port 3000");
+});
 
 server.listen().then(({ url }) => {
   console.log(`🚀 Server ready at ${url}`);

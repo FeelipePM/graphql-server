@@ -7,6 +7,27 @@ type User {
   createdAt: String!
 }
 
+input CreateNewPost {
+  content: String!
+  author_id: ID!
+  published: Boolean
+}
+
+input UpdatePost {
+  id: ID!
+  content: String
+  author_id: ID!
+  published: Boolean
+}
+
+type Post {
+  id: ID!
+  content: String
+  author: User
+  published: Boolean
+  publishedAt: String!
+}
+
 type AuthData {
   user: User
   token: String
@@ -32,6 +53,17 @@ type Query {
   signIn(email: String!, password: String!): User
 }
 
+type newPost {
+  content: String!
+  published: Boolean
+  author_id: ID!
+}
+type updatePost {
+  content: String!
+  published: Boolean
+  author_id: ID!
+}
+
 type Mutation {
   createUser(
     name: String!
@@ -40,6 +72,9 @@ type Mutation {
     birthDate: String
     inputRole: String
   ): User
+
+  createPost(data: CreateNewPost!): newPost
+  updatePost(data: UpdatePost!): updatePost
 
   signIn(email: String!, password: String!): AuthData
   createRole(name: String!, code: String): Role

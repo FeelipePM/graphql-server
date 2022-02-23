@@ -1,23 +1,14 @@
-import { ApolloServer } from "apollo-server";
-import { resolvers } from "./schemas/user/resolvers.js";
 import { importSchema } from "graphql-import";
-import { ensureAuthenticated } from "././schemas/user/middlewares/ensureAuthenticated.js";
+import { ApolloServer } from "apollo-server";
 import express from "express";
-import routes from "../src/shared/routes/index.js";
+
+import { resolvers } from "./schemas/user/resolvers.js";
+import routes from "./shared/routes/index.js";
+import { context } from "./shared/context/index.js";
 
 const typeDefs = importSchema("./src/schemas/user/schema.graphql");
 
 const app = express();
-
-const context = async ({ req }) => {
-  const { user } = await ensureAuthenticated(req);
-
-  return {
-    user,
-  };
-};
-
-//export type Context = ReturnType <typeof context>;
 
 const server = new ApolloServer({
   typeDefs: typeDefs,

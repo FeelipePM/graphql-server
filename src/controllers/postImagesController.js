@@ -1,4 +1,4 @@
-import { prisma } from "../database/prismaClient.js";
+import { prisma } from "../shared/database/prismaClient.js";
 import { ApolloError } from "apollo-server";
 
 export const postImagesController = async (req, res) => {
@@ -10,7 +10,7 @@ export const postImagesController = async (req, res) => {
       path: req.file.path,
       post: {
         connect: {
-          id: "faea50b4-81be-4606-8c6d-76969af3265e",
+          id: "58fbccc3-8e29-45a4-86e9-d68461a04f29",
         },
       },
     },

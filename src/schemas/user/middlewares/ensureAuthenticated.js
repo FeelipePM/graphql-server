@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-export function ensureAuthenticated(req, res = null, next = null) {
+export const ensureAuthenticated = (req, res = null, next = null) => {
   const token = req.headers.authorization;
   const express_source = !!next;
   // dois cenarios, com express, com gql
@@ -34,4 +34,4 @@ export function ensureAuthenticated(req, res = null, next = null) {
     }
     throw new Error("Invalid JWT token", 401);
   }
-}
+};

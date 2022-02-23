@@ -2,10 +2,16 @@ export const updatePost = async (_, args, ctx) => {
   const { id, content, published, author_id } = args.data;
 
   if (!ctx.user?.id)
-    ctx.errorHandling("You must be logged in to create a post");
+    ctx.errorHandling(
+      "You must be logged in to create a post",
+      "UNAUTHENTICATED"
+    );
 
   if (!author_id)
-    ctx.errorHandling("You must be an author in to create a post");
+    ctx.errorHandling(
+      "You must be an author in to create a post",
+      "UNAUTHORIZED"
+    );
 
   const updatePost = await ctx.prisma.post.update({
     where: {

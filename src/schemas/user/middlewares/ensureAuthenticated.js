@@ -7,8 +7,7 @@ export const ensureAuthenticated = (req, res = null, next = null) => {
 
   if (!token) {
     if (express_source) {
-      req.locals = {};
-      return next();
+      return res.status(401).json({ error: "Token invalid" });
     }
 
     return {};

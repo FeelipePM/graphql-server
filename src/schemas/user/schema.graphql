@@ -2,6 +2,7 @@ type User {
   id: ID!
   name: String!
   email: String!
+  password: String!
   age: Int
   birthDate: String
   createdAt: String!
@@ -67,8 +68,8 @@ type updatePost {
 type Mutation {
   createUser(
     name: String!
-    password: String!
     email: String!
+    password: String!
     birthDate: String
     inputRole: String
   ): User

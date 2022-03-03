@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import authConfig from "../../../config/auth.js";
 
 export const ensureAuthenticated = (req, res = null, next = null) => {
   const token = req.headers.authorization;
@@ -15,8 +16,10 @@ export const ensureAuthenticated = (req, res = null, next = null) => {
 
   const treatedToken = token.replace("Bearer ", "");
 
+  const { secret } = authConfig.jwt;
+
   try {
-    const { sub } = jwt.verify(treatedToken, process.env.APP_SECRET);
+    const { sub } = jwt.verify(treatedToken, secret);
     const user = {
       id: sub,
     };

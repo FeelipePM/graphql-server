@@ -2,10 +2,13 @@ import { generateHash } from "../providers/hashProvider.js";
 
 export const createUser = async (_, args, ctx) => {
   const { name, email, password, birthDate, inputRole } = args;
-  console.log(args.data);
 
   if (!ctx.user?.id)
     ctx.errorHandling("You must be logged in", "UNAUTHENTICATED");
+
+  if (!ctx.user.name) {
+    ctx.errorHandling("Name is required", "BAD_REQUEST");
+  }
 
   const defaultRoleId = "3f67dd89-ee64-4e70-a932-fce87f5fcab6";
 
